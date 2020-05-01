@@ -1,0 +1,26 @@
+[build-system]
+requires = ["flit"]
+build-backend = "flit.buildapi"
+
+[tool.flit.metadata]
+module = "mundi_demography"
+dist-name = "mundi-demography"
+author = "Fábio Macêdo Mendes"
+author-email = "fabiomacedomendes@gmail.com"
+home-page = "https://github.com/pydemic/mundi-demography"
+classifiers = [ "License :: OSI Approved :: MIT License" ]
+description-file = "README.rst"
+requires = [
+  "mundi",
+]
+
+[tool.flit.metadata.requires-extra]
+dev = [
+  "black",
+  "twine",
+  "coverage~=5.0",
+  "pytest~=5.0",
+]
+
+[tool.black]
+line-length = 90
