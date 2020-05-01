@@ -6,7 +6,7 @@ of the world.
 """
 __author__ = "Fábio Mendes"
 __version__ = "0.1.0"
-from .functions import population, age_distribution
+from .functions import population, age_distribution, age_pyramid
 
 
 def enable():
