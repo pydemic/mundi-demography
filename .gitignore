@@ -21,3 +21,5 @@ _tmp
 .ipynb_checkpoints
 db-yearly
 db-yearly*
+processed/
+data/BR/processed/age-distribution-C1.pkl data/BR/processed/age-pyramid-C1.pkl data/BR/processed/population-C1.pkl data/BR/processed/yearly-age-distribution-C1.pkl data/BR/processed/yearly-age-pyramid-C1.pkl.gz data/BR/processed/yearly-population-C1.pkl data/XX/processed/age-distribution-A1.pkl.gz data/XX/processed/population-A1.pkl.gz data/XX/processed/yearly-age-distribution-A1.pkl.gz data/XX/processed/yearly-population-A1.pkl.gz
