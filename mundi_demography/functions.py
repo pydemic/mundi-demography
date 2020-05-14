@@ -4,6 +4,7 @@ from pathlib import Path
 from types import ModuleType
 from typing import Union, Tuple
 
+import numpy as np
 import pandas as pd
 
 import mundi
@@ -11,14 +12,26 @@ import mundi
 ModRef = Union[str, ModuleType]
 
 
-def age_pyramid(df):
+def age_pyramid(df, infer=False):
     """
     Return age_pyramid for given region or collection of regions.
     """
     data, is_row = loader("mundi_demography", "age-pyramid", df)
+
     if is_row:
-        data = {"male": data.loc["male"].T, "female": data.loc["female"].T}
+        if infer and data.isna().all():
+            ages = age_distribution(df)
+            male = ages // 2
+            female = ages - male
+            data = {"male": male.T, "female": female.T}
+        else:
+            data = {"male": data.loc["male"].T, "female": data.loc["female"].T}
         data = pd.DataFrame(data)
+        data.index = np.array(data.index)
+        data.index.name = "age"
+
+    data.name = "age_pyramid"
+
     return data
 
 
@@ -27,8 +40,7 @@ def age_distribution(df):
     Return age_distribution for given region or collection of regions.
     """
     data, is_row = loader("mundi_demography", "age-distribution", df)
-    if is_row:
-        data.name = "age_distribution"
+    data.name = "age_distribution"
     return data
 
 
@@ -37,18 +49,22 @@ def population(df):
     Return population for given region or collection of regions.
     """
     data, is_row = loader("mundi_demography", "population", df)
-    return data
+    if not is_row:
+        return data["population"]
+    else:
+        return np.sum(data)
 
 
 def loader(package: ModRef, db_name, idx) -> Tuple[pd.DataFrame, bool]:
-    """Load distribution from package.
+    """
+    Load distribution from package.
 
     Return a tuple of (Data, is_row). The boolean "is_row" tells
     the returned data concerns a collection of items or a single row in the
     database.
     """
 
-    db = database(package, "db-" + db_name + ".pkl.gz")
+    db = database(package, db_name + ".pkl.gz")
 
     if isinstance(idx, (pd.DataFrame, pd.Series)):
         idx = idx.index
@@ -58,7 +74,8 @@ def loader(package: ModRef, db_name, idx) -> Tuple[pd.DataFrame, bool]:
         return df.iloc[0], True
 
     # Try to get from index
-    return db.reindex(idx), False
+    reindex = db.reindex(idx)
+    return reindex, False
 
 
 @lru_cache(32)

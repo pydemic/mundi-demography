@@ -17,6 +17,7 @@ docker-compose*
 *.mo
 htmlcov/
 tmp
+_tmp
 .ipynb_checkpoints
 db-yearly
 db-yearly*
